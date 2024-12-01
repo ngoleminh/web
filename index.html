@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Nhất Tỉ Lệ Phân Chia Các Khoản Chi</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            background: linear-gradient(120deg, #ff9a9e, #fad0c4, #fbc2eb, #a18cd1);
+            background-size: 300% 300%;
+            animation: gradientShift 10s ease infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        h1 {
+            color: white;
+            margin: 0;
+            padding: 15px 0;
+            font-size: 36px;
+            animation: fadeIn 1.5s ease-in-out;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 20px auto;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 30px;
+            animation: zoomIn 1.5s ease-in-out;
+        }
+
+        canvas {
+            display: block;
+            margin: 0 auto;
+            width: 100% !important;
+            max-width: 600px !important;
+            height: 100% !important;
+        }
+
+        table {
+            margin: 20px auto;
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 600px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+            animation: fadeInUp 1.5s ease-in-out;
+        }
+
+        th, td {
+            padding: 15px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        td {
+            background-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .category {
+            text-align: left;
+            font-weight: bold;
+        }
+
+        .percentage {
+            font-size: 18px;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+
+        .link-container {
+            margin-top: 30px;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        .link-container a {
+            text-decoration: none;
+            color: white;
+            background-color: #6e8efb;
+            padding: 15px 30px;
+            border-radius: 30px;
+            font-size: 18px;
+            transition: transform 0.3s, background 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .link-container a:hover {
+            background-color: #a777e3;
+            transform: scale(1.1);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Thống Nhất Tỉ Lệ Phân Chia Các Khoản Chi</h1>
+
+    <!-- Biểu Đồ -->
+    <div class="chart-container">
+        <canvas id="spendingChart"></canvas>
+    </div>
+
+    <!-- Bảng Chi Tiết -->
+    <h2 style="color: white; text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);">Bảng Phân Chia Chi Tiêu Gia Đình</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Danh Mục</th>
+                <th>Tỉ Lệ (%)</th>
+                <th>Ghi Chú</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="category">Chi Thiết Yếu</td>
+                <td class="percentage">50</td>
+                <td>Chi tiêu cơ bản: tiền ăn, nhà ở, điện nước</td>
+            </tr>
+            <tr>
+                <td class="category">Chi Không Thiết Yếu</td>
+                <td class="percentage">30</td>
+                <td>Chi tiêu giải trí, du lịch, mua sắm không cần thiết</td>
+            </tr>
+            <tr>
+                <td class="category">Tiết Kiệm</td>
+                <td class="percentage">20</td>
+                <td>Dành dụm cho tương lai hoặc đầu tư</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <!-- Liên Kết Đến Trang 2 -->
+    <div class="link-container">
+        <a href="tinh-ty-le-thu-nhap.html">Chuyển đến trang Tính Tỷ Lệ Thu Nhập</a>
+    </div>
+
+    <!-- Thư viện Chart.js và Plugin Datalabels -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
+
+    <script>
+        const ctx = document.getElementById('spendingChart').getContext('2d');
+        const data = {
+            labels: ['Chi Thiết Yếu', 'Chi Không Thiết Yếu', 'Tiết Kiệm'],
+            datasets: [{
+                label: 'Tỉ Lệ (%)',
+                data: [50, 30, 20],
+                backgroundColor: [
+                    '#FF0000',  // Màu đỏ cho chi thiết yếu
+                    '#FF9800',  // Màu cam cho chi không thiết yếu
+                    '#2196F3'   // Màu xanh dương cho tiết kiệm
+                ],
+                borderColor: [
+                    '#B71C1C',
+                    '#F57C00',
+                    '#1976D2'
+                ],
+                borderWidth: 1
+            }]
+        };
+
+        const config = {
+            type: 'pie',
+            data: data,
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 14
+                            }
+                        }
+                    },
+                    datalabels: {
+                        color: 'white',
+                        font: {
+                            size: 16,
+                            weight: 'bold'
+                        },
+                        formatter: (value, context) => {
+                            const total = context.chart.data.datasets[0].data.reduce((acc, curr) => acc + curr, 0);
+                            const percentage = ((value / total) * 100).toFixed(1);
+                            return `${percentage}%`;
+                        }
+                    }
+                }
+            },
+            plugins: [ChartDataLabels]
+        };
+
+        new Chart(ctx, config);
+    </script>
+</body>
+</html>

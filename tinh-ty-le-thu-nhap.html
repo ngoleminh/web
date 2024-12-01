@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tính Tỷ Lệ Thu Nhập</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            color: #fff;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            padding: 20px 30px;
+            text-align: center;
+            animation: fadeIn 1s ease-in-out;
+            width: 100%;
+            max-width: 500px;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        label {
+            font-size: 16px;
+            margin-top: 10px;
+            display: block;
+            text-align: left;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: none;
+            border-radius: 5px;
+            outline: none;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background: #6e8efb;
+            color: white;
+            padding: 10px 20px;
+            margin-top: 20px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s, background 0.3s;
+        }
+        button:hover {
+            transform: scale(1.1);
+            background: #a777e3;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            animation: slideUp 0.8s ease-in-out;
+        }
+        a {
+            margin-top: 20px;
+            display: inline-block;
+            text-decoration: none;
+            color: white;
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: transform 0.3s, background 0.3s;
+        }
+        a:hover {
+            background-color: #388E3C;
+            transform: scale(1.1);
+        }
+        .credit {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #f0f0f0;
+            text-align: center;
+            animation: fadeIn 2s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tính Tỷ Lệ % Từ Thu Nhập</h1>
+        <form id="incomeForm">
+            <label for="totalIncome">Tổng thu nhập (đồng):</label>
+            <input type="number" id="totalIncome" placeholder="Nhập tổng thu nhập" required>
+
+            <label for="essentialExpenses">Số tiền chi thiết yếu (đồng):</label>
+            <input type="number" id="essentialExpenses" placeholder="Nhập chi phí thiết yếu" required>
+
+            <label for="nonEssentialExpenses">Số tiền chi không thiết yếu (đồng):</label>
+            <input type="number" id="nonEssentialExpenses" placeholder="Nhập chi phí không thiết yếu" required>
+
+            <label for="savings">Tiết kiệm (đồng):</label>
+            <input type="number" id="savings" placeholder="Nhập số tiền tiết kiệm" required>
+
+            <button type="button" onclick="calculatePercentage()">Tính tỷ lệ</button>
+        </form>
+
+        <div class="result" id="result"></div>
+
+        <!-- Quay lại trang 1 -->
+        <a href="index.html" onclick="saveData()">Quay lại trang 1</a>
+    </div>
+
+    <!-- Credit -->
+    <div class="credit">
+        <p>Được tạo bởi Nhóm 4: Lê Minh, Đức Minh, Hoàng Phong, Đức Anh, Tú, Khôi, Quân</p>
+    </div>
+
+    <script>
+        // Hàm định dạng số tiền theo đơn vị
+        function formatCurrency(value) {
+            if (value >= 1e9) return (value / 1e9).toFixed(2) + " tỷ đồng";
+            if (value >= 1e6) return (value / 1e6).toFixed(2) + " triệu đồng";
+            if (value >= 1e3) return (value / 1e3).toFixed(2) + " nghìn đồng";
+            return value.toLocaleString('vi-VN') + " đồng";
+        }
+
+        // Hàm lưu dữ liệu vào localStorage
+        function saveData() {
+            const totalIncome = document.getElementById('totalIncome').value;
+            const essentialExpenses = document.getElementById('essentialExpenses').value;
+            const nonEssentialExpenses = document.getElementById('nonEssentialExpenses').value;
+            const savings = document.getElementById('savings').value;
+
+            const data = {
+                totalIncome,
+                essentialExpenses,
+                nonEssentialExpenses,
+                savings
+            };
+
+            localStorage.setItem('incomeData', JSON.stringify(data));
+        }
+
+        // Hàm khôi phục dữ liệu từ localStorage
+        function restoreData() {
+            const data = JSON.parse(localStorage.getItem('incomeData'));
+
+            if (data) {
+                document.getElementById('totalIncome').value = data.totalIncome || '';
+                document.getElementById('essentialExpenses').value = data.essentialExpenses || '';
+                document.getElementById('nonEssentialExpenses').value = data.nonEssentialExpenses || '';
+                document.getElementById('savings').value = data.savings || '';
+            }
+        }
+
+        // Hàm tính toán và hiển thị tỷ lệ
+        function calculatePercentage() {
+            const totalIncome = parseFloat(document.getElementById('totalIncome').value);
+            const essentialExpenses = parseFloat(document.getElementById('essentialExpenses').value);
+            const nonEssentialExpenses = parseFloat(document.getElementById('nonEssentialExpenses').value);
+            const savings = parseFloat(document.getElementById('savings').value);
+
+            if (isNaN(totalIncome) || totalIncome <= 0) {
+                alert('Vui lòng nhập tổng thu nhập hợp lệ.');
+                return;
+            }
+
+            const totalSpending = essentialExpenses + nonEssentialExpenses + savings;
+            const remainingAmount = totalIncome - totalSpending;
+
+            const essentialPercent = (essentialExpenses / totalIncome * 100).toFixed(2);
+            const nonEssentialPercent = (nonEssentialExpenses / totalIncome * 100).toFixed(2);
+            const savingsPercent = (savings / totalIncome * 100).toFixed(2);
+            const remainingPercent = (remainingAmount / totalIncome * 100).toFixed(2);
+
+            document.getElementById('result').innerHTML = `
+                <p>💡 Chi phí thiết yếu: <strong>${essentialPercent}%</strong> (${formatCurrency(essentialExpenses)})</p>
+                <p>🛍️ Chi phí không thiết yếu: <strong>${nonEssentialPercent}%</strong> (${formatCurrency(nonEssentialExpenses)})</p>
+                <p>💰 Tiết kiệm: <strong>${savingsPercent}%</strong> (${formatCurrency(savings)})</p>
+                <p>📈 Số tiền còn dư: <strong>${remainingPercent}%</strong> (${formatCurrency(remainingAmount)})</p>
+            `;
+
+            if (remainingAmount < 0) {
+                document.getElementById('result').innerHTML += `
+                    <p style="color: red;">⚠️ Bạn đang chi tiêu vượt quá thu nhập!</p>
+                `;
+            }
+        }
+
+        // Tự động khôi phục dữ liệu khi tải lại trang
+        window.onload = restoreData;
+    </script>
+</body>
+</html>
